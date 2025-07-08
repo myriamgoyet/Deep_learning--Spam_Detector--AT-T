@@ -1,0 +1,19 @@
+{
+    "model_type": "DistilBERT + LogisticRegression",
+    "embedding": "CLS token",
+    "features": [
+        "CLS embedding",
+        "num_words",
+        "message_len"
+    ],
+    "tokenizer": "distilbert-base-uncased",
+    "X_shape": [
+        5169,
+        770
+    ],
+    "y_shape": [
+        5169
+    ],
+    "threshold_used": "default (0.5)",
+    "notes": "Built using HuggingFace DistilBERT and scikit-learn pipeline"
+}

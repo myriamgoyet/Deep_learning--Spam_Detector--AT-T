@@ -1,0 +1,15 @@
+{
+    "X_shape": [
+        5169,
+        770
+    ],
+    "y_shape": [
+        5169
+    ],
+    "embedding_dim": 770,
+    "model_type": "DistilBERT",
+    "handcrafted_features": [
+        "num_words",
+        "message_len"
+    ]
+}
