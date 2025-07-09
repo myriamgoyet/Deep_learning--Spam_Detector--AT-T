@@ -23,53 +23,55 @@ Deep_learning--Spam_Detector--AT-T/
 │ ├── AT&T_PART1-Preprocessing.ipynb
 │ ├── AT&T_data_preprocessed.csv
 │ ├── AT&T_PART2_Baseline-model.ipynb
-│ ├── AT&T_PART3_DistilBERTwithTensorflow.ipynb
-│ ├── AT&T_PART4_DistilBERT+LRwithPyTorch.ipynb
+│ ├── AT&T_PART3_DistilBERT+LRwithPyTorch.ipynb
 │ └── AT&T_Spam_Detector.ipynb
 ├── Models_trained/
-│ ├── DistilBERT_ft/
 │ ├── DistilBERT+lr/
 │ ├── Baseline_model.joblib
 │ └── tokenizer_baseline_model.json
 ├── Evaluations/
 │ ├── DistilBERT_lr/
-│ ├── baseline_model_metrics.json
-│ ├── DistilBERT_ft_metrics.json
-│ └── DistilBERT_ft_threshold_metrics.json
+│ └── baseline_model_metrics.json
 └── README.md    
 ```
 ## Models tested 📬
 
- 1. A simple deep learning model with good results :     
-  **Model architecture :**     
-  ![Sans titre](https://github.com/user-attachments/assets/bb334c9d-30a9-4409-9e86-0e93c6c81ac8)     
-  **Model metrics :**     
-  ![Sans titre](https://github.com/user-attachments/assets/57a8ab20-bf4e-47c7-b4d0-bbc205258c9b)  
-  **Model confusion matrice :**     
-  ![Sans titre](https://github.com/user-attachments/assets/be95d6a5-41f0-40c8-ab6f-774280a94755)
-![Sans titre](https://github.com/user-attachments/assets/14a0ccc5-2f33-4d81-a262-241767a50382)
-```
-Classification_report - Training set
-              precision    recall  f1-score   support
+ 1. A simple sequential Deep learning model     
+     **Model architecture :**     
+    ```
+    model = tf.keras.Sequential([ # to create neural network models with layers stacked on top of each other
+      tf.keras.layers.Embedding(input_dim=vocab_size, output_dim=50, name="embedding"),  # Converts tokens into dense vectors of 50 dimensions
+      tf.keras.layers.GlobalAveragePooling1D(),  # Averages the word embeddings across the sentence to reduce dimensions
+      tf.keras.layers.Dense(16, activation='relu'),  # Hidden Dense layer with ReLU activation
+      tf.keras.layers.Dense(1, activation="sigmoid")  # Output layer (Binary Classification)
+    ])
+    optimizer = Adam(learning_rate=0.001)
+    ```
+ 2. A model in two steps using first DistrilBERT pretrained model for embedding, and then logistic regression for classification       
+    **Model used for Embedding :**      
+    ```
+    model_name = "distilbert-base-uncased"
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModel.from_pretrained(model_name)
+    ```
+    **Model used for classification :**
+    ```
+    model_lr = make_pipeline(
+        StandardScaler(),
+        LogisticRegression(max_iter=1000)
+    )
+    ```
 
-           0       1.00      1.00      1.00      3161
-           1       1.00      0.98      0.99       457
+  ## ⭐ Models performance
+|                | Accuracy Train | Accuracy Test | F1 Score Train | F1 Score Test | Precision Train | Precision Test | Recall Train | Recall Test |
+|----------------|----------------|---------------|----------------|---------------|-----------------|----------------|--------------|-------------|
+| Baseline model |   1.00         |   0.98        |    0.99        |    0.92       |  1.00           | 0.98           |  0.98        | 0.86        |
+| DistilBERT+lr  |    1.00        |      0.99     |       1.00     |        0.95   |   1.00          | 0.97           |  1.00        |  0.94       |  
 
-    accuracy                           1.00      3618
-   macro avg       1.00      0.99      0.99      3618
-weighted avg       1.00      1.00      1.00      3618
+### ✨The Baseline model is already good!    
+✅ Strong accuracy and F1 score   
+🚩 But recall on test set is slighlty lower, suggesting that the model is not perfect at identifying spams     
 
-Classification_report - Validation set
-              precision    recall  f1-score   support
-
-           0       0.98      1.00      0.99      1355
-           1       0.98      0.86      0.92       196
-
-    accuracy                           0.98      1551
-   macro avg       0.98      0.93      0.95      1551
-weighted avg       0.98      0.98      0.98      1551
-```     
-
-
- 2. A DistrilBERT pretrained model finetuned with tensorflow with low efficiency results:
-  
+### 😍 The DistilBERT + Logistic regression model gets better metrics     
+✅ Strong accuracy and F1 score + better recall     
+🚩 However, the model is heavyer (even if not excissively) and takes more time to run. Depending of the machine used and the database, a lighter model could be prefered.
