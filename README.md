@@ -25,10 +25,6 @@ Deep_learning--Spam_Detector--AT-T/
 │ ├── AT&T_PART2_Baseline-model.ipynb
 │ ├── AT&T_PART3_DistilBERT+LRwithPyTorch.ipynb
 │ └── AT&T_Spam_Detector.ipynb
-├── Models_trained/
-│ ├── DistilBERT+lr/
-│ ├── Baseline_model.joblib
-│ └── tokenizer_baseline_model.json
 ├── Evaluations/
 │ ├── DistilBERT_lr/
 │ └── baseline_model_metrics.json
